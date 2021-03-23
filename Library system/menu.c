@@ -30,7 +30,6 @@ void loadmenu()//登录页面函数
             system("cls");
             exit(0);
             break;
-        default:printf("\t\t输入错误，请重新输入\n");Sleep(3000);break;
     }
 }
 
@@ -52,7 +51,6 @@ void admin_system()
             getchar();
             loadmenu();
             break;
-        default:printf("\t\t输入错误，请重新输入\n");Sleep(3000);break;
     }
 }
 
@@ -64,7 +62,7 @@ void user_system()
     switch(option)//功能函数
     {
         case'1':
-            password_find();
+        //    password_change();
             break;
         case'2':
             user_book();
@@ -74,7 +72,6 @@ void user_system()
             getchar();
             loadmenu();
             break;
-        default:printf("\t\t输入错误，请重新输入\n");Sleep(3000);break;
     }
 }
 
@@ -95,7 +92,6 @@ void users_info_management()
         case'3':
             admin_system();
             break;
-        default:printf("\t\t输入错误，请重新输入\n");Sleep(3000);break;
     }
 }
 
@@ -111,24 +107,23 @@ void admin_book()
             add_book();
             break;
         case'2':
-            remove_book();
+            Delete();
             break;
         case'3':
-            Lookofnum();
+            cksj();
             break;
         case'4':
-            Manager_Add_copise();
+            change();
             break;
         case'5':
-            Find_Book();
+            find();
             break;
         case'6':
-            Manager_Look_Stu();
+            dzjy();
             break;
         case'7':
             admin_system();
             break;
-        default:printf("\t\t输入错误，请重新输入\n");Sleep(3000);break;
     }
 }
 
@@ -141,86 +136,91 @@ void user_book()
     switch(option)//功能函数
     {
         case'1':
-            Lookofnum();;
+            cksj1();
             break;
         case'2':
-            Stu_Borrow(id_record);
+            borrow1();
             break;
         case'3':
-            Stu_Back(id_record);
+            Return1();
             break;
         case'4':
-            Find_Book();
+            find1();
             break;
         case'5':
             user_system();
-        default:printf("\t\t输入错误，请重新输入\n");Sleep(3000);break;
     }
 }
 
 void loadmenu_display()//显示登录菜单
 {
-    printf("\n\n\t    欢迎使用图书信息管理系统\n\n");
+    printf("\n\n\t    Welcome to use book information management system\n\n");
     printf("**********************************************");
-    printf("\n\n\t\t1.图书管理员处理系统\n\n");
-    printf("\n\n\t\t2.普通读者管理系统\n\n");
-    printf("\n\n\t\t3.退出系统\n\n");
-    printf("\n\n\t    请按键选择，回车确定\n");
+    printf("\n\n\t\t1.Librarian Processing System\n\n");
+    printf("\n\n\t\t2.Reader system\n\n");
+    printf("\n\n\t\t3.Exit system\n\n");
+    printf("\n\n\t    Please press the number keys to select, press Enter to confirm\n");
     printf("**********************************************");
+    return ;
 }
 
 void admin_system_display()
 {
     system ("cls");
     printf("**************************************************");
-    printf("\n\n 1.用户信息管理\n\n");
-    printf("\n\n 2.图书信息管理\n\n");
-    printf("\n\n 3.返回上一层\n\n");
+    printf("\n\n 1.User information management\n\n");
+    printf("\n\n 2.Book information management\n\n");
+    printf("\n\n 3.Return to the previous level\n\n");
     printf("*************************************************\n");
-}
-
-void user_system_display()
-{
-    system ("cls");
-    printf("**************************************************");
-    printf("\n\n 1.用户找回密码\n\n");
-    printf("\n\n 2.借阅系统管理\n\n");
-    printf("\n\n 3.返回上一层\n\n");
-    printf("*************************************************\n");
+    return ;
 }
 
 void users_info_management_display()
 {
     system("cls");
     printf("**************************************************");
-    printf("\n\n 1.创建普通读者账号\n\n");
-    printf("\n\n 2.删除普通读者账号\n\n");
-    printf("\n\n 3.返回上一层\n\n");
+    printf("\n\n 1.Create a general reader account\n\n");
+    printf("\n\n 2.Delete general reader account\n\n");
+    printf("\n\n 3.Return to the previous level\n\n");
     printf("*************************************************\n");
+    return ;
 }
 
 void admin_book_display()
 {
     system("cls");
     printf("**************************************************");
-    printf("\n 1.添加图书\n\n");
-    printf("\n 2.删除图书\n\n");
-    printf("\n 3.浏览图书\n\n");
-    printf("\n 4.修改图书\n\n");
-    printf("\n 5.查询图书\n\n");
-    printf("\n 6.浏览读者借阅\n\n");
-    printf("\n 7.返回上一层\n\n");
+    printf("\n 1.Add book\n\n");
+    printf("\n 2.Delete book\n\n");
+    printf("\n 3.Browse books\n\n");
+    printf("\n 4.Edit book\n\n");
+    printf("\n 5.Query books\n\n");
+    printf("\n 6.Browse Reader Borrowing\n\n");
+    printf("\n 7.Return to the previous level\n\n");
     printf("*************************************************\n");
+    return ;
 }
 
 void user_book_display()
 {
     system("cls");
     printf("**************************************************");
-    printf("\n 1.浏览图书\n\n");
-    printf("\n 2.借阅图书\n\n");
-    printf("\n 3.归还图书\n\n");
-    printf("\n 4.查询图书\n\n");
-    printf("\n 5.返回上一层\n\n");
+    printf("\n 1.Browse books\n\n");
+    printf("\n 2.Borrow books\n\n");
+    printf("\n 3.Return the book\n\n");
+    printf("\n 4.Query books\n\n");
+    printf("\n 5.Return to the previous level\n\n");
+    printf("*************************************************\n");
+    return ;
+}
+
+void user_system_display()//主菜单
+{
+    system ("cls");
+
+    printf("**************************************************");
+    printf("\n\n 1.User modify password\n\n");
+    printf("\n\n 2.Borrowing system management\n\n");
+    printf("\n\n 3.Return to the previous level\n\n");
     printf("*************************************************\n");
 }

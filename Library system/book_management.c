@@ -1,309 +1,158 @@
 #include "book_management.h"
+#include "menu.h"
 
-int store_books()
+int store_books(FILE* file)
 {
-    FILE *fp;
-    Book *t=Book_head->next;
-    if(!t)
-        return -1;
-    if((fp=fopen("Booknode.txt","w+"))==NULL){
-        printf("\t\t打开失败\n");
-        exit(1);
+    FILE*fp;
+    int digit=0;
+    float price=0;
+    char  nam[20],aut[20],pub[20],num[20];
+    if((fp=fopen(file,"r"))==NULL)
+    {
+        printf("File open error!\n");
+        exit(0);
     }
-    while(t->next){
-        fprintf(fp,"%i",&t->id);
-        fprintf(fp,"%s",t->title);
-        fprintf(fp,"%s",t->authors);
-        fprintf(fp,"%i",&t->year);
-        fprintf(fp,"%i",&t->copies);
-        t=t->next;
-    }
-    fprintf(fp,"%i",&t->id);
-    fprintf(fp,"%s",t->title);
-    fprintf(fp,"%s",t->authors);
-    fprintf(fp,"%i",&t->year);
-    fprintf(fp,"%i",&t->copies);
+    fp = fopen(file,"a");
+    scanf("%s%s%s%s%d%f",num,nam,aut,pub,&digit,&price);
+    fprintf(fp,"%-8s%-9s%-14s%-16s%-7d%-8.2f\n",num,nam,aut,pub,digit,price);
     fclose(fp);
-    return 0;
 }
 
-Book *load_books()
+int load_books(FILE* file)
 {
     FILE *fp;
-    Book *h=NULL,*t=h,*p;
-    if((fp=fopen("Booknode.txt","r"))==NULL){
-        printf("\t\t打开失败\n");
-        exit(1);
+    if ((fp=fopen("library.txt","r"))==NULL)//打开文件
+    {
+        system ("cls");
+        printf("\n记录文件不存在!按任意键返回");
+        getch();
     }
-    getc(fp);
-    if(feof(fp)){
-        fclose(fp);
-        return NULL;
+}
+
+int add_book(Book book)
+{
+    char i;
+    system ("cls");
+    printf("\n请按以下格式输入图书信息:\n书号    书名     作者    出版社     进库量      单价");
+    for(; i!=27;)
+    {
+        printf("\n请输入:\n");
+        store_books("library.txt");
+        printf("结束输入请按ESC\n");
+        i=getch();
     }
-    rewind(fp);
-    while(!feof(fp)){
-        p=(Book *)malloc(sizeof(Book));
-        p->next=NULL;
-        fscanf(fp,"%i",&p->id);
-        fscanf(fp,"%s",p->title);
-        fscanf(fp,"%s",p->authors);
-        fscanf(fp,"%i",&p->year);
-        fscanf(fp,"%i",&p->copies);
-        if(h==NULL)
-            h=p;
+    printf("\n保存成功，按任意键返回上一层!");
+    getch();
+    admin_book();
+}
+
+int remove_book(Book book)
+{
+    struct _Book *head=NULL;
+    struct _Book *p,*p1,*p2;
+    int tmany=0,n=0,j,k;
+    float tprice=0;
+    char  tnam[20],taut[20],tcat[20],tpub[20],tnum[20];
+    char jnam[20];
+    char i,hit;
+    FILE *fp;
+    if ((fp=fopen("library.txt","r"))==NULL)//打开文件
+    {
+        system ("cls");
+        printf("\n记录文件不存在!按任意键返回");
+        getch();
+        admin_book();
+    }
+    else//实现删除的功能
+    {
+        system ("cls");
+        printf("\n请输入你要删除的书名:");//输入删除图书书名
+        scanf("%s",jnam);
+        printf("\n确认删除请回车，取消请按Esc\n");
+        i=getch();
+        for(; i!=13&&i!=27;)
+            i=getch();
+        if (i==27)
+            admin_book();
+        fp=fopen("library.txt","r");
+        j=books_num();
+        for (k=0; k<j; k++)
+        {
+            fscanf(fp,"%s%s%s%s%d%f",tnum,tnam,taut,tpub,&tmany,&tprice);
+            if (strcmp(jnam,tnam)!=0)//比较名字，将不同名字的信息复制到链表
+            {
+                n++;
+                if (n==1)//建立链表
+                {
+                    p1=p2=(struct _Book*)malloc(sizeof(struct _Book));
+                    head=p1;
+                }
+                else
+                {
+                    p2->next=p1;
+                    p2=p1;
+                    p1=(struct _Book*)malloc(sizeof(struct _Book));//新建链表
+                }
+
+                strcpy(p1->num,tnum);//复制书号
+                strcpy(p1->nam,tnam);//复制书名
+                strcpy(p1->aut,taut);//复制作者名字
+                strcpy(p1->pub,tpub);//复制出版社
+                p1->digit=tmany;//复制个数
+                p1->price=tprice;//复制单价
+            }
+        }
+        if (n==0)
+        {
+            head=NULL;
+        }
         else
-            t->next=p;
-        t=p;
+        {
+            p2->next=p1;
+            p1->next=NULL;
+            fclose(fp);
+        }
+    }
+    fp=fopen("library.txt","w");//清空文件，只写打开，然后关闭
+    fclose(fp);
+    fp=fopen("library.txt","a");//追加文件
+    p=head;
+    for (; p!=NULL;) //把链表内容覆盖到文件
+    {
+        fprintf(fp,"%-8s%-9s%-14s%-16s%-7d%-8.2f\n",p->num,p->nam,p->aut,p->pub,p->digit,p->price);
+        p=p->next;
     }
     fclose(fp);
-    return h;
-}
-
-int add_book()
-{
-    printf("\t\t请输入以下信息：\n");
-    Book *new=(Book *)malloc(sizeof(Book));
-    new->next=NULL;
-    Book *t=Book_head;
-    printf("\t\t书籍编号：");
-    gets(new->id);
-    if(find_book_by_id(new->id)){
-        free(new);
-        printf("\t\t该书已上架过，请选择增加库存\n");
-        printf("\t\t按任意键退出");
-        getch();
-        return -1;
-    }
-    printf("\t\t书名：");
-    gets(new->title);
-    printf("\t\t作者：");
-    gets(new->authors);
-    printf("\t\t年份：");
-    scanf("%i",&new->year);
-    getchar();
-    printf("\t\t库存：");
-    scanf("%i",&new->copies);
-    getchar();
-    Sleep(500);
-    printf("\t\t正在上架···\n");
-    Sleep(500);
-    printf("\t\t···\n");
-    Sleep(500);
-    printf("\t\t···\n");
-    Sleep(500);
-    printf("\t\t上架成功！\n");
-    while(t->next){
-        t=t->next;
-    }
-    t->next=new;
-    printf("\t\t按任意键退出");
+    printf("\n删除成功,按任意键返回上一层\n");
     getch();
-}
-
-int remove_book()
-{
-    char book_num[20];
-    Book *t=Book_head->next;
-    Lookofnum();
-    if(!t){
-        printf("\t\t按任意键退出");
-        getch();
-        return -1;
-    }
-    printf("\t\t请输入需下架的书籍编号：");
-    gets(book_num);
-    t=find_book_by_id(book_num);
-    if(!t){
-        printf("\t\t抱歉，无此书籍\n");
-        printf("\t\t按任意键退出");
-        getch();
-        return -1;
-    }
-    t->copies=0;
-    Sleep(500);
-    printf("\t\t正在下架···\n");
-    Sleep(500);
-    printf("\t\t下架成功！\n");
-    printf("\t\t按任意键退出");
-    getch();
+    admin_book();
 }
 
 BookArray find_book_by_title(const char* title)
 {
-    BookArray *t=Book_head->next;
-    while(t){
-        if(strcmp(title,t->array->title)==0)
-            return *t;
-        t=t->array->next;
-    }
+
 }
 
 BookArray find_book_by_author(const char* author)
 {
-    BookArray *t=Book_head->next;
-    while(t){
-        if(strcmp(author,t->array->authors)==0)
-            return *t;
-        t=t->array->next;
-    }
+
 }
 
 BookArray find_book_by_year(unsigned int year)
 {
-    BookArray *t=Book_head->next;
-    while(t){
-        if(strcmp(year,t->array->year)==0)
-            return *t;
-        t=t->array->next;
-    }
+    
 }
 
-Book *find_book_by_id(unsigned int id)
+int books_num()//统计图书文本个数
 {
-    Book *t=Book_head->next;
-    while(t){
-        if(strcmp(id,t->id)==0)
-            return t;
-        t=t->next;
-    }
+    FILE *fp;
+    int many=0,n;
+    float tprice=0;
+    char tname[20],tauthor[20],tchuban[20],tshuhao[20];
+    fp=fopen("library.txt","r");//打开文件
+    for (n=0; !feof(fp); n++) //逐个读文件
+        fscanf(fp,"%s%s%s%s%d%f",tshuhao,tname,tauthor,tchuban,&many,&tprice);
+    n--;
+    fclose(fp);//关闭文件
+    return (n);//返回个数
 }
-
-void Lookofnum(void)
-{
-    if(Book_head->next==NULL)
-    {
-        printf("\t\t暂无书籍\n");
-        return;
-    }
-    if(Book_head->next->next==NULL)
-    {
-        return;
-    }
-    Book *p1,*p2,*p3,*end,*tem;
-    Book *head=Book_head;
-    end=NULL;
-    while(head->next!=end){
-        for(p1=head,p2=p1->next,p3=p2->next;p3!=end;p1=p1->next,p2=p2->next,p3=p3->next){
-            if((strcmp(p2->id,p3->id))>0){
-                p1->next=p2->next;
-                p2->next=p3->next;
-                p3->next=p2;
-                tem=p2;
-                p2=p3;
-                p3=tem;
-            }
-
-        }
-        end=p2;
-    }
-    Manager_Print_Book();
-}
-
-void Manager_Print_Book(void)
-{
-    Book *t=Book_head->next;;
-    if(t==NULL){
-        printf("\t\t没有任何书籍信息\n");
-        return;
-    }
-    printf("\n\n\t**********************************");
-    printf("********************************\n\n");
-    printf("\t %-8s%-12s%-12s%-10s%-8s\n\n",
-           "编号","书名","作者","年份","库存");
-    while(t)
-    {
-        printf("\t %-8u%-12s%-12s%-18u%-10i-8d\n",
-               t->id,t->title,t->authors,t->year,t->copies);
-        t=t->next;
-    }
-    printf("\n\t**************************************");
-    printf("****************************\n\n\n");
-}
-
-void Manager_Add_copise(void)
-{
-    Book *t;
-    int n;
-    char ch[20];
-    Lookofnum();
-    if(!Book_head->next){
-        printf("\t\t无法增加库存\n");
-        printf("\t\t按任意键退出");
-        getch();
-        return;
-    }
-    printf("\t\t输入新增书的编号:");
-    gets(ch);
-    t=find_book_by_id(ch);
-    if(!t){
-        printf("\t\t抱歉，无此书\n");
-        printf("\t\t按任意键退出");
-        getch();
-        return;
-    }
-    printf("\t\t输入新增的数量：");
-    scanf("%d",&n);
-    getchar();
-    t->copies+=n;
-    Sleep(500);
-    printf("\t\t正在增加···\n");
-    Sleep(500);
-    printf("\t\t成功增加%d本书籍\n",n);
-    printf("\t\t按任意键退出");
-    getch();
-}
-
-void Find_Book(void)
-{
-    Book *t=Book_head->next;
-    char book_n[20];
-    if(t==NULL){
-        printf("\t\t抱歉，暂无书籍\n");
-        printf("\t\t按任意键退出");
-        getch();
-        return;
-    }
-    printf("\t\t请输入你需要查找的书名：");
-    gets(book_n);
-    while(t){
-        if(strcmp(book_n,t->title)==0)
-            break;
-        t=t->next;
-    }
-    if(t==NULL){
-        printf("\t\t抱歉，无此书籍\n");
-        printf("\t\t按任意键退出");
-        getch();
-        return;
-    }
-    t=Book_head->next;
-    printf("\n\n\t**********************************");
-    printf("********************************\n\n");
-    printf("\t %-8s%-12s%-12s%-10s%-8s\n\n",
-           "编号","书名","作者","年份","库存");
-    while(t){
-        if(strcmp(book_n,t->title)==0)
-            printf("\t %-8u%-12s%-12s%-10.2u%-8d\n",
-                   t->id,t->title,t->authors,t->year,t->copies);
-        t=t->next;
-    }
-    printf("\n\t**************************************");
-    printf("****************************\n\n\n");
-    printf("\n\t\t按任意键退出");
-    getch();
-
-}
-
-Book *Book_exit(char *Book_num)
-{
-
-    Book *t=Book_head->next;
-    while(t){
-        if(strcmp(t->id,Book_num)==0)
-            break;
-        t=t->next;
-    }
-    return t;
-}
-
-
