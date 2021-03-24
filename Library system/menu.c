@@ -12,215 +12,208 @@
 #include<windows.h>
 
 
-void loadmenu()//ÁôªÂΩïÈ°µÈù¢ÂáΩÊï∞
+void loadmenu()//µ«¬º“≥√Ê∫Ø ˝
 {
-    char option;
-    loadmenu_display();
-    printf("\n");
-    scanf("%c",&option);
-    switch(option)//ÂäüËÉΩÂáΩÊï∞
+    char ma='1';
+
+    while(ma!='0')
     {
-        case'1':
-            admin_land();
-            break;
-        case'2':
-            user_land();
-            break;
-        case'3':
-            system("cls");
-            exit(0);
-            break;
+        loadmenu_display();
+        printf("\t\tEnter your choice:");
+        scanf("%c",&ma);
+        while(getchar()!='\n');
+        switch(ma)
+        {
+            case '1':user_system_land();break;
+            case '2':admin_system_land();break;
+            case '0':Massage_Save();break;
+            default:printf("\t\tInput errors, please re-enter\n");Sleep(3000);break;
+        }
     }
 }
 
-void admin_system()
+void admin_system_land()
 {
-    char option;
-    admin_system_display();
-    scanf(" %c",&option);
-    switch(option)//ÂäüËÉΩÂáΩÊï∞
+    char mp='1';
+
+    while(mp!='0')
     {
-        case'1':
-            users_info_management();
-            break;
-        case'2':
-            admin_book();
-            break;
-        case'3':
-            system("cls");
-            getchar();
-            loadmenu();
-            break;
+        admin_system_land_display();
+        printf("\t\tEnter your choice:");
+        scanf("%c",&mp);
+        while(getchar()!='\n');
+        switch(mp)
+        {
+            case '1':admin_land();break;
+            case '0':break;
+            default:printf("\t\tInput errors, please re-enter\n");Sleep(3000);break;
+        }
     }
 }
 
-void user_system()
+void user_system_land()
 {
-    char option;
-    user_system_display();
-    scanf(" %c",&option);
-    switch(option)//ÂäüËÉΩÂáΩÊï∞
+    char sp='1';
+
+    while(sp!='0')
     {
-        case'1':
-        //    password_change();
-            break;
-        case'2':
-            user_book();
-            break;
-        case'3':
-            system("cls");
-            getchar();
-            loadmenu();
-            break;
+        user_system_land_display();
+        printf("\t\tEnter your choice:");
+        scanf("%c",&sp);
+        while(getchar()!='\n');
+        switch(sp)
+        {
+            case '1':user_land();break;
+            case '2':adduser();break;
+            case '3':password_find();break;
+            case '0':break;
+            default:printf("\t\tInput errors, please re-enter\n");Sleep(1500);break;
+        }
     }
 }
 
-void users_info_management()
+void admin_system(Manager *t)
 {
-    char option;
-    users_info_management_display();
-    getchar();
-    scanf(" %c",&option);
-    switch(option)//ÂäüËÉΩÂáΩÊï∞
+    char ml='1';
+    while(ml!='0')
     {
-        case'1':
-            adduser();
-            break;
-        case'2':
-            deluser();
-            break;
-        case'3':
-            admin_system();
-            break;
+        admin_system_display();
+        printf("\t\t£∫");
+        scanf("%c",&ml);
+        while(getchar()!='\n');
+        switch(ml)
+        {
+            case '1':add_book();break;
+            case '2':remove_book();break;
+            case '3':Lookofnum();break;
+            case '4':Manager_Manager_Stu();break;
+            case '5':Manager_Change_Password(t);break;
+            case '0':admin_system_land();break;
+            default:printf("\t\t ‰»Î¥ÌŒÛ£¨«Î÷ÿ–¬ ‰»Î\n");Sleep(3000);break;
+        }
     }
 }
 
-void admin_book()
+void user_system(Student *enter_stu)
 {
-    char option;
-    admin_book_display();
-    getchar();
-    scanf(" %c",&option);
-    switch(option)//ÂäüËÉΩÂáΩÊï∞
+    char sl='1';
+    while(sl!='0')
     {
-        case'1':
-            add_book();
-            break;
-        case'2':
-            Delete();
-            break;
-        case'3':
-            cksj();
-            break;
-        case'4':
-            change();
-            break;
-        case'5':
-            find();
-            break;
-        case'6':
-            dzjy();
-            break;
-        case'7':
-            admin_system();
-            break;
+        user_system_display();
+        printf("\t\t£∫");
+        scanf("%c", &sl);
+        while (getchar() != '\n');
+        switch (sl) {
+            case '1':
+                Stu_Borrow(enter_stu);
+                break;
+            case '2':
+                Stu_Back(enter_stu);
+                break;
+            case '3':
+                Find_Book();
+                break;
+            case '4':
+                Find_Theborrow(enter_stu);
+                break;
+            case '5':
+                Change_Stupassword(enter_stu);
+                break;
+            case '0':
+                user_system_land();
+                break;
+            default:
+                printf("\t\t ‰»Î¥ÌŒÛ£¨«Î÷ÿ–¬ ‰»Î\n");
+                Sleep(3000);
+                break;
+        }
     }
 }
 
-void user_book()
+void Manager_Manager_Stu(void)
 {
-    char option;
-    user_book_display();
-    getchar();
-    scanf("%c",&option);
-    switch(option)//ÂäüËÉΩÂáΩÊï∞
+
+    char mms='1';
+
+    while(mms!='0')
     {
-        case'1':
-            cksj1();
-            break;
-        case'2':
-            borrow1();
-            break;
-        case'3':
-            Return1();
-            break;
-        case'4':
-            find1();
-            break;
-        case'5':
-            user_system();
+       Manager_Manager_Stu_display();
+        scanf("%c",&mms);
+        while(getchar()!='\n');
+        switch(mms)
+        {
+            case '1':Manager_Look_Stu();break;
+            case '2':deluser();break;
+            case '0':break;
+            default:printf("\t\t ‰»Î¥ÌŒÛ£¨«Î÷ÿ–¬ ‰»Î\n");Sleep(3000);break;
+        }
     }
 }
 
-void loadmenu_display()//ÊòæÁ§∫ÁôªÂΩïËèúÂçï
+void loadmenu_display()//œ‘ æµ«¬º≤Àµ•
 {
+    system("CLS");
     printf("\n\n\t    Welcome to use book information management system\n\n");
     printf("**********************************************");
-    printf("\n\n\t\t1.Librarian Processing System\n\n");
-    printf("\n\n\t\t2.Reader system\n\n");
-    printf("\n\n\t\t3.Exit system\n\n");
+    printf("\n\n\t\t1.Student system\n\n");
+    printf("\n\n\t\t2.Manager System\n\n");
+    printf("\n\n\t\t0.Exit system\n\n");
     printf("\n\n\t    Please press the number keys to select, press Enter to confirm\n");
-    printf("**********************************************");
-    return ;
+    printf("**********************************************\n");
 }
 
-void admin_system_display()
+void admin_system_land_display()
 {
     system ("cls");
     printf("**************************************************");
-    printf("\n\n 1.User information management\n\n");
-    printf("\n\n 2.Book information management\n\n");
-    printf("\n\n 3.Return to the previous level\n\n");
+    printf("\n\n 1.Sign in\n\n");
+    printf("\n\n 0.Return to the previous level\n\n");
     printf("*************************************************\n");
-    return ;
 }
 
-void users_info_management_display()
-{
-    system("cls");
-    printf("**************************************************");
-    printf("\n\n 1.Create a general reader account\n\n");
-    printf("\n\n 2.Delete general reader account\n\n");
-    printf("\n\n 3.Return to the previous level\n\n");
-    printf("*************************************************\n");
-    return ;
-}
-
-void admin_book_display()
+void admin_system_display()
 {
     system("cls");
     printf("**************************************************");
     printf("\n 1.Add book\n\n");
     printf("\n 2.Delete book\n\n");
-    printf("\n 3.Browse books\n\n");
-    printf("\n 4.Edit book\n\n");
-    printf("\n 5.Query books\n\n");
-    printf("\n 6.Browse Reader Borrowing\n\n");
-    printf("\n 7.Return to the previous level\n\n");
+    printf("\n 3.View books\n\n");
+    printf("\n 4.Manage student accounts\n\n");
+    printf("\n 5.Manager changes password\n\n");
+    printf("\n 0.Return to the previous level\n\n");
     printf("*************************************************\n");
-    return ;
 }
 
-void user_book_display()
+void user_system_display()
 {
     system("cls");
     printf("**************************************************");
-    printf("\n 1.Browse books\n\n");
-    printf("\n 2.Borrow books\n\n");
-    printf("\n 3.Return the book\n\n");
-    printf("\n 4.Query books\n\n");
-    printf("\n 5.Return to the previous level\n\n");
+    printf("\n 1.Borrow books\n\n");
+    printf("\n 2.Return book\n\n");
+    printf("\n 3.Find books\n\n");
+    printf("\n 4.Borrowing records\n\n");
+    printf("\n 5.User change password\n\n");
+    printf("\n 0.Return to the previous level\n\n");
     printf("*************************************************\n");
-    return ;
 }
 
-void user_system_display()//‰∏ªËèúÂçï
+void user_system_land_display()//÷˜≤Àµ•
 {
-    system ("cls");
-
+    system("cls");
     printf("**************************************************");
-    printf("\n\n 1.User modify password\n\n");
-    printf("\n\n 2.Borrowing system management\n\n");
-    printf("\n\n 3.Return to the previous level\n\n");
+    printf("\n\n 1.Sign in\n\n");
+    printf("\n\n 2.Register an account\n\n");
+    printf("\n\n 3.Retrieve password\n\n");
+    printf("\n\n 0.Exit system\n\n");
     printf("*************************************************\n");
+}
+
+void Manager_Manager_Stu_display()
+{
+    system("CLS");
+    printf("\n\n\n\n\t\t\t«Î—°‘Ò\n\n");
+    printf("\t\t\t1)≤Èø¥—ß…˙√˚µ•\n");
+    printf("\t\t\t2)…æ≥˝—ß…˙∫≈¬Î≤¢πÈªπÀ˘”– ÈºÆ\n");
+    printf("\t\t\t0)ÕÀ≥ˆ\n");
+    printf("\n\t\t£∫");
 }

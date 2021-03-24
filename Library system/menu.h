@@ -11,17 +11,17 @@
 
 void loadmenu();
 void admin_system();
+void admin_system_land();
 void user_system();
-void users_info_management();
-void admin_book();
-void user_book();
+void user_system_land();
+void Manager_Manager_Stu();
 
 void loadmenu_display();
 void admin_system_display();
 void user_system_display();
-void users_info_management_display();
-void admin_book_display();
-void user_book_display();
+void admin_system_land_display();
+void user_system_land_display();
+void Manager_Manager_Stu_display();
 
 
 #endif //LIBRARY_SYSTEM_MENU_H
