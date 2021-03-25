@@ -26,7 +26,7 @@ void loadmenu()//登录页面函数
         {
             case '1':user_system_land();break;
             case '2':admin_system_land();break;
-            case '0':Massage_Save();break;
+            case '0':Massage_Save();exit(0);
             default:printf("\t\tInput errors, please re-enter\n");Sleep(3000);break;
         }
     }
@@ -45,7 +45,7 @@ void admin_system_land()
         switch(mp)
         {
             case '1':admin_land();break;
-            case '0':break;
+            case '0':loadmenu();break;
             default:printf("\t\tInput errors, please re-enter\n");Sleep(3000);break;
         }
     }
@@ -66,7 +66,7 @@ void user_system_land()
             case '1':user_land();break;
             case '2':adduser();break;
             case '3':password_find();break;
-            case '0':break;
+            case '0':loadmenu();break;
             default:printf("\t\tInput errors, please re-enter\n");Sleep(1500);break;
         }
     }
@@ -89,7 +89,7 @@ void admin_system(Manager *t)
             case '4':Manager_Manager_Stu();break;
             case '5':Manager_Change_Password(t);break;
             case '0':admin_system_land();break;
-            default:printf("\t\t输入错误，请重新输入\n");Sleep(3000);break;
+            default:printf("\t\tInput errors, please re-enter\n");Sleep(3000);break;
         }
     }
 }
@@ -100,7 +100,7 @@ void user_system(Student *enter_stu)
     while(sl!='0')
     {
         user_system_display();
-        printf("\t\t：");
+        printf("\t\t:");
         scanf("%c", &sl);
         while (getchar() != '\n');
         switch (sl) {
@@ -123,12 +123,13 @@ void user_system(Student *enter_stu)
                 user_system_land();
                 break;
             default:
-                printf("\t\t输入错误，请重新输入\n");
+                printf("\t\tInput errors, please re-enter\n");
                 Sleep(3000);
                 break;
         }
     }
 }
+
 
 void Manager_Manager_Stu(void)
 {
@@ -145,9 +146,61 @@ void Manager_Manager_Stu(void)
             case '1':Manager_Look_Stu();break;
             case '2':deluser();break;
             case '0':break;
-            default:printf("\t\t输入错误，请重新输入\n");Sleep(3000);break;
+            default:printf("\t\tInput errors, please re-enter\n");Sleep(3000);break;
         }
     }
+}
+
+void Find_Book(void)
+{
+    Book *t=Book_head->next;
+
+    if(t==NULL){
+        printf("\t\tSorry, no books\n");
+        printf("\t\tPress any key to exit");
+        getch();
+        return;
+    }
+    printf("Please select the search method you need\n");
+    char mms='1';
+    while(mms!='0')
+    {
+        Find_Book_display();
+        scanf("%c",&mms);
+        while(getchar()!='\n');
+        switch(mms)
+        {
+            case '1':find_book_by_title_display();break;
+            case '2':find_book_by_author_display();break;
+            case '3':find_book_by_year_display();break;
+            case '0':break;
+            default:printf("\t\tInput errors, please re-enter\n");Sleep(3000);break;
+        }
+    }
+}
+
+void find_book_by_title_display()
+{
+    char book_n[20];
+    printf("\t\tPlease enter the title of the book you need to find:");
+    gets(book_n);
+    find_book_by_title(book_n);
+}
+
+void find_book_by_author_display()
+{
+    char book_n[20];
+    printf("\t\tPlease enter the author of the book you need to find:");
+    gets(book_n);
+    find_book_by_author(book_n);
+}
+
+void find_book_by_year_display()
+{
+    unsigned int year;
+    printf("\t\tPlease enter the year of the book you need to find:");
+    scanf("%d", &year);
+    find_book_by_year(year);
 }
 
 void loadmenu_display()//显示登录菜单
@@ -157,7 +210,7 @@ void loadmenu_display()//显示登录菜单
     printf("**********************************************");
     printf("\n\n\t\t1.Student system\n\n");
     printf("\n\n\t\t2.Manager System\n\n");
-    printf("\n\n\t\t0.Exit system\n\n");
+    printf("\n\n\t\t0.Exit the system and save the data\n\n");
     printf("\n\n\t    Please press the number keys to select, press Enter to confirm\n");
     printf("**********************************************\n");
 }
@@ -204,16 +257,25 @@ void user_system_land_display()//主菜单
     printf("\n\n 1.Sign in\n\n");
     printf("\n\n 2.Register an account\n\n");
     printf("\n\n 3.Retrieve password\n\n");
-    printf("\n\n 0.Exit system\n\n");
+    printf("\n\n 0.Return to the previous level\n\n");
     printf("*************************************************\n");
 }
 
 void Manager_Manager_Stu_display()
 {
     system("CLS");
-    printf("\n\n\n\n\t\t\t请选择\n\n");
-    printf("\t\t\t1)查看学生名单\n");
-    printf("\t\t\t2)删除学生号码并归还所有书籍\n");
-    printf("\t\t\t0)退出\n");
+    printf("\n\n\n\n\t\t\tplease choose\n\n");
+    printf("\t\t\t1)View the list of students\n");
+    printf("\t\t\t2)Delete student number and return all books\n");
+    printf("\t\t\t0)drop out\n");
+    printf("\n\t\t：");
+}
+
+void Find_Book_display()
+{
+    printf("\t\t\t1)Find books by title\n");
+    printf("\t\t\t2)Find books by author\n");
+    printf("\t\t\t3)Find books by year\n");
+    printf("\t\t\t0)Return to the previous level\n");
     printf("\n\t\t：");
 }

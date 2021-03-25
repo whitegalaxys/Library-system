@@ -1,5 +1,6 @@
 #include "book_management.h"
 #include "account.h"
+#include "menu.h"
 
 int store_books()
 {
@@ -12,18 +13,18 @@ int store_books()
         exit(1);
     }
     while(t->next){
-        fprintf(fp,"%i",&t->id);
-        fprintf(fp,"%s",t->title);
-        fprintf(fp,"%s",t->authors);
-        fprintf(fp,"%i",&t->year);
-        fprintf(fp,"%i",&t->copies);
+        fprintf(fp,"%s ",t->id);
+        fprintf(fp,"%s ",&t->title);
+        fprintf(fp,"%s ",&t->authors);
+        fprintf(fp,"%d ",t->year);
+        fprintf(fp,"%d\n",t->copies);
         t=t->next;
     }
-    fprintf(fp,"%i",&t->id);
-    fprintf(fp,"%s",t->title);
-    fprintf(fp,"%s",t->authors);
-    fprintf(fp,"%i",&t->year);
-    fprintf(fp,"%i",&t->copies);
+    fprintf(fp,"%s ",t->id);
+    fprintf(fp,"%s ",&t->title);
+    fprintf(fp,"%s ",&t->authors);
+    fprintf(fp,"%d ",t->year);
+    fprintf(fp,"%d",t->copies);
     fclose(fp);
     return 0;
 }
@@ -45,11 +46,11 @@ Book *load_books()
     while(!feof(fp)){
         p=(Book *)malloc(sizeof(Book));
         p->next=NULL;
-        fscanf(fp,"%i",&p->id);
-        fscanf(fp,"%s",p->title);
-        fscanf(fp,"%s",p->authors);
-        fscanf(fp,"%i",&p->year);
-        fscanf(fp,"%i",&p->copies);
+        fscanf(fp,"%s",p->id);
+        fscanf(fp,"%s",&p->title);
+        fscanf(fp,"%s",&p->authors);
+        fscanf(fp,"%d",&p->year);
+        fscanf(fp,"%d",&p->copies);
         if(h==NULL)
             h=p;
         else
@@ -67,7 +68,7 @@ int add_book()
     new->next=NULL;
     Book *t=Book_head;
     printf("\t\tID:");
-    gets(new->id);
+    scanf("%s",&new->id);
     if(find_book_by_id(new->id)){
         free(new);
         printf("\t\tThe book has already been put on the shelves, please choose to increase inventory\n");
@@ -76,14 +77,14 @@ int add_book()
         return -1;
     }
     printf("\t\ttitle:");
-    gets(new->title);
-    printf("\t\tauthor:");
-    gets(new->authors);
+    scanf("%s",&new->title);
+    printf("\t\tauthors:");
+    scanf("%s", &new->authors);
     printf("\t\tyear:");
-    scanf("%u",&new->year);
+    scanf("%d",&new->year);
     getchar();
     printf("\t\tcopies:");
-    scanf("%u",&new->copies);
+    scanf("%d",&new->copies);
     getchar();
     Sleep(500);
     printf("\t\tAdding...\n");
@@ -103,7 +104,7 @@ int add_book()
 
 int remove_book()
 {
-    char book_num[20];
+    char *book_num;
     Book *t=Book_head->next;
     Lookofnum();
     if(!t){
@@ -127,43 +128,107 @@ int remove_book()
     printf("\t\tSuccessfully removed!\n");
     printf("\t\tPress any key to exit");
     getch();
+    Sleep(500);
 }
 
 BookArray find_book_by_title(const char* title)
 {
-    BookArray *t=Book_head->next;
+    Book *t=Book_head->next;
     while(t){
-        if(strcmp(title,t->array->title)==0)
-            return *t;
-        t=t->array->next;
+        if(strcmp(title,&t->title)==0)
+            break;
+        t=t->next;
     }
+    if(t==NULL){
+        printf("\t\tSorry, no such book\n");
+        printf("\t\tPress any key to exit");
+        getch();
+        return;
+    }
+    t=Book_head->next;
+    printf("\n\n\t**********************************");
+    printf("********************************\n\n");
+    printf("\t %-8s%-12s%-12s%-10s%-8s\n\n",
+           "ID","title","author","year","copies");
+    while(t){
+        if(strcmp(title,&t->title)==0)
+            printf("\t %-8u%-12s%-12s%-10.2u%-8d\n",
+                   t->id,&t->title,&t->authors,t->year,t->copies);
+        t=t->next;
+    }
+    printf("\n\t**************************************");
+    printf("****************************\n\n\n");
+    printf("\n\t\tPress any key to exit");
+    getch();
 }
 
 BookArray find_book_by_author(const char* author)
 {
-    BookArray *t=Book_head->next;
+    Book *t=Book_head->next;
     while(t){
-        if(strcmp(author,t->array->authors)==0)
-            return *t;
-        t=t->array->next;
+        if(strcmp(author,&t->authors)==0)
+            break;
+        t=t->next;
     }
+    if(t==NULL){
+        printf("\t\tSorry, no such book\n");
+        printf("\t\tPress any key to exit");
+        getch();
+        return;
+    }
+    t=Book_head->next;
+    printf("\n\n\t**********************************");
+    printf("********************************\n\n");
+    printf("\t %-8s%-12s%-12s%-10s%-8s\n\n",
+           "ID","title","author","year","copies");
+    while(t){
+        if(strcmp(author,&t->authors)==0)
+            printf("\t %-8u%-12s%-12s%-10.2u%-8d\n",
+                   t->id,&t->title,&t->authors,t->year,t->copies);
+        t=t->next;
+    }
+    printf("\n\t**************************************");
+    printf("****************************\n\n\n");
+    printf("\n\t\tPress any key to exit");
+    getch();
 }
 
 BookArray find_book_by_year(unsigned int year)
 {
-    BookArray *t=Book_head->next;
+    Book *t=Book_head->next;
     while(t){
-        if(strcmp(year,t->array->year)==0)
-            return *t;
-        t=t->array->next;
+        if(year==t->year)
+            break;
+        t=t->next;
     }
+    if(t==NULL){
+        printf("\t\tSorry, no such book\n");
+        printf("\t\tPress any key to exit");
+        getch();
+        return;
+    }
+    t=Book_head->next;
+    printf("\n\n\t**********************************");
+    printf("********************************\n\n");
+    printf("\t %-8s%-12s%-12s%-10s%-8s\n\n",
+           "ID","title","author","year","copies");
+    while(t){
+        if(year==t->year)
+            printf("\t %-8u%-12s%-12s%-10.2u%-8d\n",
+                   t->id,&t->title,&t->authors,t->year,t->copies);
+        t=t->next;
+    }
+    printf("\n\t**************************************");
+    printf("****************************\n\n\n");
+    printf("\n\t\tPress any key to exit");
+    getch();
 }
 
-Book *find_book_by_id(unsigned int id)
+Book *find_book_by_id(char *id)
 {
     Book *t=Book_head->next;
     while(t){
-        if(strcmp(id,t->id)==0)
+        if(strcmp(id,&t->id)==0)
             return t;
         t=t->next;
     }
@@ -185,7 +250,7 @@ void Lookofnum(void)
     end=NULL;
     while(head->next!=end){
         for(p1=head,p2=p1->next,p3=p2->next;p3!=end;p1=p1->next,p2=p2->next,p3=p3->next){
-            if((strcmp(p2->id,p3->id))>0){
+            if((strcmp(&p2->id,&p3->id))>0){
                 p1->next=p2->next;
                 p2->next=p3->next;
                 p3->next=p2;
@@ -198,6 +263,8 @@ void Lookofnum(void)
         end=p2;
     }
     Manager_Print_Book();
+    printf("Press any key to exit the view\n");
+    getch();
 }
 
 void Manager_Print_Book(void)
@@ -207,14 +274,15 @@ void Manager_Print_Book(void)
         printf("\t\tNo book information\n");
         return;
     }
+    system("cls");
     printf("\n\n\t**********************************");
     printf("********************************\n\n");
     printf("\t %-8s%-12s%-12s%-10s%-8s\n\n",
            "ID","title","author","year","copies");
     while(t)
     {
-        printf("\t %-8u%-12s%-12s%-18u%-10i-8d\n",
-               t->id,t->title,t->authors,t->year,t->copies);
+        printf("\t %-8s%-12s%-12s%-10u%-10i\n",
+               t->id,&t->title,&t->authors,t->year,t->copies);
         t=t->next;
     }
     printf("\n\t**************************************");
@@ -254,53 +322,13 @@ void Manager_Add_copise(void)
     getch();
 }
 
-void Find_Book(void)
-{
-    Book *t=Book_head->next;
-    char book_n[20];
-    if(t==NULL){
-        printf("\t\tSorry, no books\n");
-        printf("\t\tPress any key to exit");
-        getch();
-        return;
-    }
-    printf("\t\tPlease enter the title of the book you need to find:");
-    gets(book_n);
-    while(t){
-        if(strcmp(book_n,t->title)==0)
-            break;
-        t=t->next;
-    }
-    if(t==NULL){
-        printf("\t\tSorry, no such book\n");
-        printf("\t\tPress any key to exit");
-        getch();
-        return;
-    }
-    t=Book_head->next;
-    printf("\n\n\t**********************************");
-    printf("********************************\n\n");
-    printf("\t %-8s%-12s%-12s%-10s%-8s\n\n",
-           "ID","title","author","year","copies");
-    while(t){
-        if(strcmp(book_n,t->title)==0)
-            printf("\t %-8u%-12s%-12s%-10.2u%-8d\n",
-                   t->id,t->title,t->authors,t->year,t->copies);
-        t=t->next;
-    }
-    printf("\n\t**************************************");
-    printf("****************************\n\n\n");
-    printf("\n\t\tPress any key to exit");
-    getch();
 
-}
-
-Book *Book_exit(char *Book_num)
+Book *Book_exit(unsigned int Book_num)
 {
 
     Book *t=Book_head->next;
     while(t){
-        if(strcmp(t->id,Book_num)==0)
+        if(t->id==Book_num)
             break;
         t=t->next;
     }

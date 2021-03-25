@@ -83,6 +83,9 @@ void Find_Theborrow(Student *Stu_num);
 void Manager_Change_Password(Manager *Man_num);
 void Change_Stupassword(Student *Stu_num);
 
+void user_system(Student *enter_stu);
+void admin_system(Manager *t);
+
 #endif //CLIONPROJECTS_ACCOUNT_H
 
 

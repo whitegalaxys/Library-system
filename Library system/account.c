@@ -38,7 +38,7 @@ void admin_land()
     Sleep(500);
     printf("\t\tloading...\n");
     Sleep(1000);
-    admin_system();
+    admin_system(t);
 
 }
 
@@ -89,8 +89,7 @@ void user_land()
     Sleep(500);
     printf("\n\t\tlogin successful! Press any key to continue\n");
         getch();
-        user_system();
-
+    user_system(enter_stu);
 }
 
 int Password_Text(char *Password)
@@ -181,13 +180,13 @@ void adduser()
     printf("Created successfully, press any key to return");
     getch();
     system("cls");
-    user_system();
+    user_system_land();
 }
 
 void deluser()
 {
     char bh[20];
-    BookArray *a;
+    Book *a;
     Student *head=Student_head;
     Student *t=Student_head->next;
     printf("\t\tPrinting the list of students...\n");
@@ -231,8 +230,8 @@ void deluser()
     printf("\t\tsuccessfully deleted!\n");
     for(int i=0;i<10;i++){
         if(strcmp(t->stu_bor_book[i],"0")!=0){
-            *a=find_book_by_title(t->stu_bor_book[i]);
-            a->array->copies+=1;
+            a=find_book_by_id(t->stu_bor_book[i]);
+            a->copies+=1;
         }
     }
     t=Student_head->next;
@@ -306,7 +305,7 @@ void password_find()
     printf("\t\tPress any key to exit");
     getch();
     system("cls");
-    user_system();
+    user_system_land();
 }
 
 void Password_Input(char *Password)
@@ -586,7 +585,7 @@ void Stu_Borrow(Student *Stu_num)
 {
     int n=0;
     Book *t;
-    char numb[10];
+    char numa[10];
     for(int i=0;i<10;i++){
         if(strcmp(Stu_num->stu_bor_book[i],"0")!=0)
             n++;
@@ -595,18 +594,19 @@ void Stu_Borrow(Student *Stu_num)
     printf("\n\t\tLoading...\n");
     Sleep(1000);
     if(n==10){
-        printf("\t\tHello, you have borrowed 10 books and the maximum borrowing limit has been reached.");
+        printf("\t\tHello, you have borrowed 10 books and the maximum borrowing limit has been reached.\n");
         printf("\t\tPlease return the borrowed books first\n\n");
         printf("\t\tPress any key to exit");
         getch();
         return;
     }
     printf("\t\tYou have borrowed %d books and you can borrow %d books\n",n,10-n);
+    Sleep(2000);
     printf("\t\tThe book list is as follows\n");
     Manager_Print_Book();
-    printf("\n\t\tPlease select the number of the book you want to borrow:");
-    gets(numb);
-    t=Book_exit(numb);
+    printf("\n\t\tPlease select the ID of the book you want to borrow:");
+    gets(numa);
+    t=find_book_by_id(numa);
     printf("\t\tProcessing...\n");
     Sleep(1000);
     if(!t){
@@ -621,7 +621,7 @@ void Stu_Borrow(Student *Stu_num)
         getch();
         return;
     }
-    if(Ifborrow(Stu_num,numb)){
+    if(Ifborrow(Stu_num,numa)){
         printf("\t\tSorry, you have already borrowed this book, please do not borrow again\n");
         printf("\t\tPress any key to exit");
         getch();
@@ -630,7 +630,7 @@ void Stu_Borrow(Student *Stu_num)
     for(int i=0;i<10;i++){
         if(strcmp(Stu_num->stu_bor_book[i],"0")==0){
             Stu_num->stu_bor_book[i][0]='\0';
-            strcat(Stu_num->stu_bor_book[i],numb);
+            strcat(Stu_num->stu_bor_book[i],numa);
             t->copies--;
             break;
         }
@@ -657,7 +657,7 @@ int Ifborrow(Student *Stu_num,char *Book_num)
 
 void Stu_Back(Student *Stu_num)
 {
-    char book_num[15];
+    char book_num[10];
     int tem=0;
     printf("\n\t\tWelcome to the book return system\n");
     printf("\n\t\tLoading...\n");
@@ -709,13 +709,13 @@ void Print_Borbook(Student *Stu_num)
     Book *t;
     printf("\n\n\t*************************");
     printf("********************************\n\n");
-    printf("\t %-8s%-12s%-12s%-18s-10s\n\n",
+    printf("\t %-8s%-12s%-12s%-18s\n\n",
            "ID","title","author","year");
     for(int i=0;i<10;i++){
         if(strcmp(Stu_num->stu_bor_book[i],"0")!=0){
             t=find_book_by_id(Stu_num->stu_bor_book[i]);
-            printf("\t %-8u%-12s%-12s%-18u\n",
-                   t->id,t->title,t->authors,t->year);
+            printf("\t %-8s%-12s%-12s%-18u\n",
+                   t->id,&t->title,&t->authors,t->year);
         }
     }
     printf("\n\t*****************************");
@@ -762,8 +762,8 @@ void Find_Theborrow(Student *Stu_num)
     for(int i=0;i<10;i++){
         if(strcmp(Stu_num->stu_bor_book[i],"0")!=0){
             t=find_book_by_id(Stu_num->stu_bor_book[i]);
-            printf("\t %-8u%-12s%-12s%-18u\n",
-                   t->id,t->title,t->authors,t->year);
+            printf("\t %-8s%-12s%-12s%-18u\n",
+                   t->id,&t->title,&t->authors,t->year);
         }
     }
     printf("\n\t*****************************");
@@ -775,73 +775,73 @@ void Find_Theborrow(Student *Stu_num)
 void Manager_Change_Password(Manager *Man_num)
 {
     char password_tem[20];
-    printf("\t\t加载中···\n");
+    printf("\t\tLoading...\n");
     Sleep(500);
-    printf("\t\t请输入原密码：");
+    printf("\t\tPlease enter the original password:");
     if(Password_Text_Find(Man_num->man_passw)==0){
-        printf("\n\t\t已经错误输入密码三次，将退出修改密码系统···\n");
+        printf("\n\t\tIf you have entered the wrong password three times, you will exit the password modification system...\n");
         Sleep(1500);
         return;
     }
-    printf("\n\t\t验证中···\n");
+    printf("\n\t\tVerifying...\n");
     Sleep(1000);
-    printf("\t\t验证成功！\n");
+    printf("\t\tThe verification is successful!\n");
     Sleep(500);
-    printf("\t\t请输入新密码(6~10位)：");
+    printf("\t\tPlease enter a new password (6~10 digits):");
     Password_Input(password_tem);
-    printf("\n\t\t请再次输入新密码：");
+    printf("\n\t\tPlease enter the new password again:");
     if(Password_Text(password_tem)==0){
-        printf("\t\t已经错误输入密码三次，将退出修改密码系统···\n");
+        printf("\t\tIf you have entered the wrong password three times, you will exit the password modification system...\n");
         Sleep(1500);
         return;
     }
     Man_num->man_passw[0]='\0';
     strcat(Man_num->man_passw,password_tem);
     Sleep(500);
-    printf("\n\t\t请稍等，正在修改···\n");
+    printf("\n\t\tPlease wait, it is being revised...\n");
     Sleep(1000);
-    printf("\t\t···\n");
+    printf("\t\t...\n");
     Sleep(1000);
-    printf("\t\t···\n");
+    printf("\t\t...\n");
     Sleep(1000);
-    printf("\t\t恭喜！修改成功！\n");
-    printf("\t\t按任意键退出");
+    printf("\t\tCongratulations! Successfully modified!\n");
+    printf("\t\tPress any key to exit");
     getch();
 }
 
 void Change_Stupassword(Student *Stu_num)
 {
     char password_tem[20];
-    printf("\t\t加载中···\n");
+    printf("\t\tLoading...\n");
     Sleep(500);
-    printf("\t\t请输入原密码：");
+    printf("\t\tPlease enter the original password:");
     if(Password_Text_Find(Stu_num->stu_passw)==0){
-        printf("\n\t\t已经错误输入密码三次，将退出修改密码系统···\n");
+        printf("\n\t\tIf you have entered the wrong password three times, you will exit the password modification system...\n");
         Sleep(1500);
         return;
     }
-    printf("\n\t\t验证中···\n");
+    printf("\n\t\tVerifying...\n");
     Sleep(1000);
-    printf("\t\t验证成功！\n");
+    printf("\t\tThe verification is successful!\n");
     Sleep(500);
-    printf("\t\t请输入新密码(6~10位)：");
+    printf("\t\tPlease enter a new password (6~10 digits):");
     Password_Input(password_tem);
-    printf("\n\t\t请再次输入新密码：");
+    printf("\n\t\tPlease enter the new password again:");
     if(Password_Text(password_tem)==0){
-        printf("\t\t已经错误输入密码三次，将退出修改密码系统···\n");
+        printf("\t\tIf you have entered the wrong password three times, you will exit the password modification system...\n");
         Sleep(3000);
         return;
     }
     Stu_num->stu_passw[0]='\0';
     strcat(Stu_num->stu_passw,password_tem);
     Sleep(500);
-    printf("\n\t\t请稍等，正在修改···\n");
+    printf("\n\t\tPlease wait, it is being revised...\n");
     Sleep(1000);
-    printf("\t\t···\n");
+    printf("\t\t...\n");
     Sleep(1000);
-    printf("\t\t···\n");
+    printf("\t\t...\n");
     Sleep(1000);
-    printf("\t\t恭喜！修改成功！\n");
-    printf("\t\t按任意键退出");
+    printf("\t\tCongratulations! Successfully modified!\n");
+    printf("\t\tPress any key to exit");
     getch();
 }

@@ -19,7 +19,7 @@ int main(void)
     Book_head->next= load_books();
     Student_head->next=Student_load();
     Manager_head->next=Manager_load();
-    loadmenu();
+loadmenu();
     system("PAUSE");
     return 0;
 }

@@ -10,9 +10,9 @@
 
 
 void loadmenu();
-void admin_system();
+
+
 void admin_system_land();
-void user_system();
 void user_system_land();
 void Manager_Manager_Stu();
 
@@ -22,6 +22,9 @@ void user_system_display();
 void admin_system_land_display();
 void user_system_land_display();
 void Manager_Manager_Stu_display();
-
+void Find_Book_display();
+void find_book_by_title_display();
+void find_book_by_author_display();
+void find_book_by_year_display();
 
 #endif //LIBRARY_SYSTEM_MENU_H

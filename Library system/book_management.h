@@ -18,7 +18,7 @@
 
 
 typedef struct _Book {
-	unsigned int id; //Book ID
+	char id[10]; //Book ID
 	char* title; //book title
 	char* authors; //comma separated list of authors
 	unsigned int year; // year of publication
@@ -69,12 +69,12 @@ BookArray find_book_by_author(const char* author);
 //array is the null pointer.
 BookArray find_book_by_year(unsigned int year);
 
-Book *find_book_by_id(unsigned int id);
+Book *find_book_by_id(char *id);
 void Lookofnum(void);
 void Manager_Print_Book(void);
 void Manager_Add_copise(void);
 void Find_Book(void);
-Book *Book_exit(char *Book_num);
+Book *Book_exit(unsigned int Book_num);
 void Massage_Save(void);
 
 
