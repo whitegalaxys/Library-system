@@ -19,11 +19,12 @@
 
 typedef struct _Book {
 	char id[10]; //Book ID
-	char* title; //book title
-	char* authors; //comma separated list of authors
+	char title[50]; //book title
+	char authors[50]; //comma separated list of authors
 	unsigned int year; // year of publication
 	unsigned int copies; //number of copies the library has
-	struct _Book *next;
+	unsigned int copies_now;//The number of books that can be borrowed in the library
+	struct _Book *next;//Next book
 }Book;
 
 typedef struct _BookArray {
@@ -31,7 +32,7 @@ typedef struct _BookArray {
 	unsigned int length; // number of elements in the (Book*) array 
 }BookArray;
 
-Book *Book_head;
+Book *Book_head;//The head node of the book information linked list
 
 
 //saves the database of books in the specified file
@@ -68,14 +69,18 @@ BookArray find_book_by_author(const char* author);
 //provided title can be found. The length of the array is also recorded in the returned structure, with 0 in case
 //array is the null pointer.
 BookArray find_book_by_year(unsigned int year);
-
+//Find the book by its ID and return the node of the book
 Book *find_book_by_id(char *id);
-void Lookofnum(void);
-void Manager_Print_Book(void);
-void Manager_Add_copise(void);
-void Find_Book(void);
-Book *Book_exit(unsigned int Book_num);
-void Massage_Save(void);
+//View the book list in positive order by the book ID
+void look_of_num(void);
+//Prints book list
+void admin_print_book(void);
+//Add the total number of copies of the book
+void admin_add_copies(void);
+//Find books menu
+void find_book(void);
+//Save all the information in the linked list to a file
+void all_save(void);
 
 
 #endif
